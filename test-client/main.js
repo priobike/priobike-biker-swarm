@@ -1,8 +1,8 @@
 import { Vector, distanceP2P } from "./utils.js";
 
-const AUTH_ENDPOINT = "http://priobike.vkw.tu-dresden.de/staging/session-wrapper/authentication";
-const WS_ENDPOINT = "ws://priobike.vkw.tu-dresden.de/staging/session-wrapper/websocket/sessions/";
-const ROUTE_ENDPOINT = "http://priobike.vkw.tu-dresden.de/staging/session-wrapper/getroute";
+const AUTH_ENDPOINT = "http://priobike.vkw.tu-dresden.de/production/session-wrapper/authentication";
+const WS_ENDPOINT = "ws://priobike.vkw.tu-dresden.de/production/session-wrapper/websocket/sessions/";
+const ROUTE_ENDPOINT = "http://priobike.vkw.tu-dresden.de/production/session-wrapper/getroute";
 
 const CLIENT_ID = "JS_TEST_CLIENT";
 
@@ -35,20 +35,11 @@ const routingResponse = await fetch(ROUTE_ENDPOINT, {
     sessionId,
     waypoints: [
       {
-        'lon': 13.728029, 'lat': 51.03063
+        'lon': 9.977496, 'lat': 53.56415
       },
       {
-        'lon': 13.727347, 'lat': 51.030582
+        'lon': 9.990059, 'lat': 53.560791
       },
-      {
-        'lon': 13.727347, 'lat': 51.030353
-      },
-      {
-        'lon': 13.727791, 'lat': 51.030343
-      },
-      {
-        'lon': 13.728152, 'lat': 51.030576
-      }
     ]
   }),
   headers: {
