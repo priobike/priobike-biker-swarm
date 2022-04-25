@@ -1,6 +1,6 @@
 version: '3'
 services:
   test-client:
-    image: priobike-biker-swarm-test-client-staging:latest
+    image: priobike-biker-swarm-test-client:latest
     deploy:
       replicas: 10
