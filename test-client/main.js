@@ -4,6 +4,7 @@ const AUTH_ENDPOINT = "http://priobike.vkw.tu-dresden.de/production/session-wrap
 const WS_ENDPOINT = "ws://priobike.vkw.tu-dresden.de/production/session-wrapper/websocket/sessions/";
 const ROUTE_ENDPOINT = "http://priobike.vkw.tu-dresden.de/production/session-wrapper/getroute";
 
+// IMPORTANT: DONT CHANGE THIS ID. Test clients are hidden in the session analyzer and removed from persistence after session closure.
 const CLIENT_ID = "JS_TEST_CLIENT";
 
 const INTERPOLATE_STEP_LENGTH = 4; // m
