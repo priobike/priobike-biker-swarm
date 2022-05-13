@@ -150,6 +150,9 @@ setTimeout(async function() {
         `sending position (${ridingPoints[t].lat}, ${ridingPoints[t].lon})`
       );
 
+      const date = new Date();
+      const iso8601 = date.toISOString();
+
       socket.send(
         JSON.stringify({
           jsonrpc: "2.0",
@@ -158,6 +161,9 @@ setTimeout(async function() {
             lon: ridingPoints[t].lon,
             lat: ridingPoints[t].lat,
             speed: INTERPOLATE_STEP_LENGTH / (POSITION_UPDATE_INTERVAL / 1000),
+            timestamp: iso8601,
+            heading: 0.0, // 0.0 is a default value
+            accuracy: 0.0, // 0.0 is a default value
           },
         })
       );
