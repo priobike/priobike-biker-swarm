@@ -35,18 +35,67 @@ setTimeout(async function() {
   // ======= ROUTING REQUEST =======
   console.log("======= ROUTING REQUEST =======");
 
+  // Alte Teststrecke: Shell-Tankstelle Theodor-Heuss-Platz über Edmund-Siemers-Allee nach An d. Verbindungsbahn
+  // Signalgruppen (Stand: 18. Mai 2022): 271_31, 271_33, 279_24, 279_25, 413_2
+  // https://www.google.de/maps/dir/'53.56090651069028,9.99085153989529'/'53.564343128008701,9.978573058782963'/@53.5625761,9.9813999,16z/data=!3m1!4b1!4m10!4m9!1m3!2m2!1d9.9908515!2d53.5609065!1m3!2m2!1d9.9785731!2d53.5643431!3e1
+  const testRoute1 = [
+    {
+      'lon': 9.99085153989529, 'lat': 53.56090651069028
+    },
+    {
+      'lon': 9.978573058782963, 'lat': 53.564343128008701
+    },
+  ];
+
+  // Alte Teststrecke: An d. Verbindungsbahn über Edmund-Siemers-Allee nach McDonalds Theodor-Heuss-Platz
+  // Signalgruppen (Stand: 18. Mai 2022): 413_3, 2150_8, 271_1 (befindet sich ganz am Ende der Strecke und kann auch wegfallen)
+  // https://www.google.de/maps/dir/'53.564123305799505,9.978725860677336'/'53.561170720637968,9.989768344244068'/@53.5626634,9.9797544,16z/data=!3m1!4b1!4m10!4m9!1m3!2m2!1d9.9787259!2d53.5641233!1m3!2m2!1d9.9897683!2d53.5611707!3e1
+  const testRoute2 = [
+    {
+      'lon': 9.978725860677336, 'lat': 53.564123305799505
+    },
+    {
+      'lon': 9.989768344244068, 'lat': 53.561170720637968
+    },
+  ];
+
+  // Neue Teststrecke: Busparkplatz Willy-Brandt-Straße über B4 nach Millerntorwache
+  // Signalgruppen (Stand: 18. Mai 2022): 70_27, 76_18, 76_20, 256_27, 333_12, 92_37, 92_38, 193_30, 193_32
+  // https://www.google.de/maps/dir/'53.547722154285324,10.004045134575035'/'53.550264133830126,9.971739418506827'/@53.5469702,9.9965353,16.18z/data=!4m20!4m19!1m13!2m2!1d10.0040451!2d53.5477222!3m4!1m2!1d9.9968626!2d53.5475663!3s0x47b18f1d4fa210bf:0x7164391b88468bbd!3m4!1m2!1d9.9882061!2d53.547483!3s0x47b18f04d1f5667d:0x1d6d663ff6ea0f94!1m3!2m2!1d9.9717394!2d53.5502641!3e1!5m2!1e4!1e3
+  const testRoute3 = [
+    {
+      'lon': 10.004045134575035, 'lat': 53.547722154285324
+    },
+    // Eingefügter Wegpunkt für Signalgruppen 92_37 und 92_38 (Kreuzung Neanderstraße, Radweg wurde nicht genutzt)
+    {
+      'lon': 9.978636, 'lat': 53.549482
+    },
+    {
+      'lon': 9.971739418506827, 'lat': 53.550264133830126
+    },
+  ];
+
+  // Neue Testrecke: Millerntorpl./Alter Elbpark über B4 nach Deichtor Office Zentrum
+  // Signalgruppen (Stand: 18. Mai 2022): 92_43, 92_44, 310_3, 333_29, 333_30, 256_30, 532_33, 70_42, 70_43
+  // https://www.google.de/maps/dir/+53.54990402934412,9.971606990198367/'53.547262160720436,10.004240381440082'/@53.5472429,10.0037521,109m/data=!3m1!1e3!4m10!4m9!1m3!2m2!1d9.971607!2d53.549904!1m3!2m2!1d10.0042404!2d53.5472622!3e1!5m2!1e4!1e3
+  const testRoute4 = [
+    {
+      'lon': 9.971606990198367, 'lat': 53.54990402934412
+    },
+    {
+      'lon': 10.004240381440082, 'lat': 53.547262160720436
+    },
+  ];
+
+  // Select a random route
+  const testRoutes = [testRoute1, testRoute2, testRoute3, testRoute4];
+  const randomRoute = testRoutes[Math.floor(Math.random() * testRoutes.length)];
+
   const routingResponse = await fetch(ROUTE_ENDPOINT, {
     method: "POST",
     body: JSON.stringify({
       sessionId,
-      waypoints: [
-        {
-          'lon': 9.977496, 'lat': 53.56415
-        },
-        {
-          'lon': 9.990059, 'lat': 53.560791
-        },
-      ]
+      waypoints: randomRoute
     }),
     headers: {
       "Content-type": "application/json; charset=UTF-8",
