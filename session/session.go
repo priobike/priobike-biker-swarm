@@ -165,14 +165,16 @@ func Run(
 	// Start a goroutine that prints out all messages.
 	go func() {
 		for {
+			// Log the current time
+			from := time.Now()
 			// If the client is disconnected, finish the goroutine.
-			fmt.Println("Session: Waiting for message")
-			_, message, err := ws.ReadMessage()
+			_, _, err := ws.ReadMessage()
 			if err != nil {
 				fmt.Println("Session: Disconnected from session")
 				return
 			}
-			fmt.Println("Session: Received message:", string(message))
+			to := time.Now()
+			fmt.Println("Session: Recommendation with Latency", to.Sub(from))
 		}
 	}()
 
@@ -185,7 +187,7 @@ func Run(
 	})
 	fmt.Println("Session: Activated Navigation")
 
-	for i, point := range selectedPath.Points.Coordinates {
+	for _, point := range selectedPath.Points.Coordinates {
 		// Convert the current time into an ISO 8601 string, UTC.
 		// Format should be : 2022-10-26T09:42:43.262186Z
 		timestamp := time.Now().UTC().Format(time.RFC3339Nano)
@@ -204,10 +206,7 @@ func Run(
 			Accuracy:  0.0, // 0.0 is a default value
 			Heading:   0.0, // 0.0 is a default value
 		})
-		pct := (float64(i) / float64(len(selectedPath.Points.Coordinates))) * 100
-		fmt.Println("Session: Updated Position (Progress: ", pct, ")")
-		// Sleep for 2 seconds.
-		time.Sleep(2 * time.Second)
+		time.Sleep(1 * time.Second) // GPS updates every second
 	}
 
 	JsonRPC(false, ws, "Navigation", struct {
