@@ -2,12 +2,16 @@
 
 Build the image:
 ```
-docker build -t priobike-biker-swarm-test-client --no-cache .
+docker build -t bikenow.vkw.tu-dresden.de/priobike-biker-swarm:main --no-cache .
 ```
 
 Deploy to stack:
 ```
-docker stack deploy --compose-file docker-compose.yml biker-swarm
+docker stack deploy \
+    --prune \
+    --with-registry-auth \
+    --compose-file docker-compose.yml \
+    biker-swarm
 ```
 
 Check if it is running:

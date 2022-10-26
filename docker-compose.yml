@@ -1,6 +1,7 @@
 version: '3'
 services:
-  test-client:
-    image: priobike-biker-swarm-test-client:latest
+  virtual-biker:
+    image: bikenow.vkw.tu-dresden.de/priobike/priobike-biker-swarm:main
     deploy:
-      replicas: 100
+      mode: replicated
+      replicas: 10
