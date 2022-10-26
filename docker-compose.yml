@@ -3,4 +3,4 @@ services:
   test-client:
     image: priobike-biker-swarm-test-client:latest
     deploy:
-      replicas: 100
+      replicas: 1000

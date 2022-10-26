@@ -2,7 +2,7 @@
 
 Build the image:
 ```
-docker build -t priobike-biker-swarm-test-client --no-cache ./test-client
+docker build -t priobike-biker-swarm-test-client --no-cache .
 ```
 
 Deploy to stack:
