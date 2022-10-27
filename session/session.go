@@ -23,7 +23,7 @@ type AuthResponse struct {
 	SessionId string `json:"sessionId"`
 }
 
-func authenticate(deployment string) AuthResponse {
+func authenticate(deployment string) (AuthResponse, string) {
 	// Create a session url.
 	authUrl := fmt.Sprintf("https://priobike.vkw.tu-dresden.de/%s/", deployment)
 	authUrl += "session-wrapper/authentication"
@@ -47,13 +47,15 @@ func authenticate(deployment string) AuthResponse {
 		io.Copy(os.Stdout, authResp.Body)
 		panic("Auth request failed")
 	}
+	// Keep the sticky cookie for the session.
+	stickyCookie := authResp.Header.Get("Set-Cookie")
 	// Decode the response.
 	authResponse := AuthResponse{}
 	err = json.NewDecoder(authResp.Body).Decode(&authResponse)
 	if err != nil {
 		panic(err)
 	}
-	return authResponse
+	return authResponse, stickyCookie
 }
 
 type SelectRideRequest struct {
@@ -72,6 +74,7 @@ func selectRide(
 	auth AuthResponse,
 	selectedSGResponse *sgselector.SGResponse,
 	selectedPath graphhopper.RouteResponsePath,
+	stickyCookie string,
 ) SelectRideResponse {
 	// Create a session url.
 	selectRideUrl := fmt.Sprintf("https://priobike.vkw.tu-dresden.de/%s/", deployment)
@@ -89,7 +92,12 @@ func selectRide(
 		panic(err)
 	}
 	// Create a request.
-	selectRideResp, err := http.Post(selectRideUrl, "application/json", bytes.NewBuffer(selectRideReqJson))
+	selectRideReqHttp, err := http.NewRequest("POST", selectRideUrl, bytes.NewBuffer(selectRideReqJson))
+	if err != nil {
+		panic(err)
+	}
+	selectRideReqHttp.Header.Set("Cookie", stickyCookie)
+	selectRideResp, err := http.DefaultClient.Do(selectRideReqHttp)
 	if err != nil {
 		panic(err)
 	}
@@ -149,13 +157,15 @@ func Run(
 	selectedSGResponse *sgselector.SGResponse,
 	selectedPath graphhopper.RouteResponsePath,
 ) {
-	auth := authenticate(deployment)
-	selectRide(deployment, auth, selectedSGResponse, selectedPath)
+	auth, stickyCookie := authenticate(deployment)
+	selectRide(deployment, auth, selectedSGResponse, selectedPath, stickyCookie)
 
 	// Open a websocket connection.
 	wsUrl := fmt.Sprintf("wss://priobike.vkw.tu-dresden.de/%s/", deployment)
 	wsUrl += "session-wrapper/websocket/sessions/" + auth.SessionId
-	ws, _, err := websocket.DefaultDialer.Dial(wsUrl, nil)
+	ws, _, err := websocket.DefaultDialer.Dial(wsUrl, http.Header{
+		"Cookie": []string{stickyCookie},
+	})
 	if err != nil {
 		panic(err)
 	}
