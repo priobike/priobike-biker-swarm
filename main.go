@@ -8,7 +8,6 @@ import (
 
 	"github.com/priobike/priobike-biker-swarm/graphhopper"
 	"github.com/priobike/priobike-biker-swarm/nominatim"
-	"github.com/priobike/priobike-biker-swarm/session"
 	"github.com/priobike/priobike-biker-swarm/sgselector"
 )
 
@@ -37,14 +36,8 @@ func main() {
 	}
 
 	// For each route path, fetch the signal groups
-	var selectedSGResponse *sgselector.SGResponse
-	var selectedPath graphhopper.RouteResponsePath
 	for _, path := range routeResponse.Paths {
 		// Fetch a sg selector request.
-		selectedPath = path
-		selectedSGResponse = sgselector.FetchSgSelector(deployment, path)
+		sgselector.FetchSgSelector(deployment, path)
 	}
-
-	// Run a session.
-	session.Run(deployment, selectedSGResponse, selectedPath)
 }
