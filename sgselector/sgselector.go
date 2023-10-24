@@ -4,10 +4,9 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io"
-	"net/http"
-	"os"
+	"math/rand"
 
+	"github.com/priobike/priobike-biker-swarm/common"
 	"github.com/priobike/priobike-biker-swarm/graphhopper"
 )
 
@@ -55,10 +54,17 @@ type SGCrossing struct {
 }
 
 // Fetch a sg selector request.
-func FetchSgSelector(deployment string, ghPath graphhopper.RouteResponsePath) *SGResponse {
+func FetchSgSelector(deployment common.Deployment, ghPath graphhopper.RouteResponsePath, routingEngine common.RoutingEngine) *SGResponse {
+	matchers := []string{
+		"legacy",
+		"ml",
+	}
+	matcher := matchers[rand.Intn(len(matchers))]
 	// Create a sg selector url.
-	sgUrl := fmt.Sprintf("https://priobike.vkw.tu-dresden.de/%s/", deployment)
+	sgUrl := fmt.Sprintf("https://%s/", deployment.BaseUrl())
 	sgUrl += "sg-selector-backend/routing/select"
+	sgUrl += fmt.Sprintf("?matcher=%s", matcher)
+	sgUrl += fmt.Sprintf("&routing=%s", routingEngine.SGSelectorParameter())
 	// Create a request body.
 	sgRequest := SGRequest{}
 	for _, point := range ghPath.Points.Coordinates {
@@ -72,27 +78,19 @@ func FetchSgSelector(deployment string, ghPath graphhopper.RouteResponsePath) *S
 	sgRequest.Ascend = ghPath.Ascend
 	sgRequest.Descend = ghPath.Descend
 	sgRequest.EstimatedArr = ghPath.Time
-	// Print the body of the request.
+
 	sgReqJson, err := json.MarshalIndent(sgRequest, "", "  ")
 	if err != nil {
 		panic(err)
 	}
 	// Send the request.
-	sgResp, err := http.Post(sgUrl, "application/json", bytes.NewBuffer(sgReqJson))
-	if err != nil {
-		panic(err)
-	}
-	defer sgResp.Body.Close()
-	fmt.Println("SG Response status:", sgResp.Status)
-	if sgResp.StatusCode != 200 {
-		io.Copy(os.Stdout, sgResp.Body)
-		panic("SG Selector request failed")
-	}
+	serviceName := "SG Selector, Matcher: " + matcher + ", Routing: " + routingEngine.String()
+	response := common.PostJson(sgUrl, serviceName, bytes.NewBuffer(sgReqJson))
 	// Decode the response.
-	sgResponse := &SGResponse{}
-	err = json.NewDecoder(sgResp.Body).Decode(&sgResponse)
+	sgResponse := SGResponse{}
+	err = json.Unmarshal(response, &sgResponse)
 	if err != nil {
 		panic(err)
 	}
-	return sgResponse
+	return &sgResponse
 }
