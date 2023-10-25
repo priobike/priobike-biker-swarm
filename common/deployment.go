@@ -94,6 +94,70 @@ func (w Deployment) BoundingBox() BoundingBox {
 	}[w]
 }
 
+func (w Deployment) PredictionServiceMqttUrl() string {
+	return []string{
+		"priobike.vkw.tu-dresden.de",
+		"priobike.vkw.tu-dresden.de",
+		"priobike-release.inf.tu-dresden.de",
+	}[w]
+}
+
+func (w Deployment) PredictionServiceMqttPort() int {
+	return []int{
+		20050,
+		20032,
+		20050,
+	}[w]
+}
+
+func (w Deployment) PredictionServiceMqttUsername() string {
+	return []string{
+		"user",
+		"user",
+		"user",
+	}[w]
+}
+
+func (w Deployment) PredictionServiceMqttPassword() string {
+	return []string{
+		"mqtt@priobike-2022",
+		"mqtt@priobike-2022",
+		"mqtt@priobike-2022",
+	}[w]
+}
+
+func (w Deployment) PredictorMqttUrl() string {
+	return []string{
+		"priobike.vkw.tu-dresden.de",
+		"priobike.vkw.tu-dresden.de",
+		"priobike-release.inf.tu-dresden.de",
+	}[w]
+}
+
+func (w Deployment) PredictorMqttPort() int {
+	return []int{
+		20054,
+		20035,
+		20054,
+	}[w]
+}
+
+func (w Deployment) PredictorMqttUsername() string {
+	return []string{
+		"user",
+		"user",
+		"user",
+	}[w]
+}
+
+func (w Deployment) PredictorMqttPassword() string {
+	return []string{
+		"mqtt@priobike-2022",
+		"mqtt@priobike-2022",
+		"mqtt@priobike-2022",
+	}[w]
+}
+
 func (w Deployment) String() string {
 	return []string{"staging", "production", "release"}[w]
 }
