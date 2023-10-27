@@ -1,0 +1,84 @@
+package tracking
+
+import (
+	"bytes"
+	"fmt"
+	"io"
+	"math/rand"
+	"mime/multipart"
+	"net/http"
+	"os"
+
+	"github.com/priobike/priobike-biker-swarm/common"
+)
+
+func SendRandomTrack(deployment common.Deployment) {
+	exampleTracks := [][]string{
+		{
+			"example_track_long.json.gz",
+			"example_track_long_gps.csv.gz",
+			"example_track_long_acc.csv.gz",
+			"example_track_long_gyro.csv.gz",
+			"example_track_long_mag.csv.gz",
+		},
+		{
+			"example_track_short.json.gz",
+			"example_track_short_gps.csv.gz",
+			"example_track_short_acc.csv.gz",
+			"example_track_short_gyro.csv.gz",
+			"example_track_short_mag.csv.gz",
+		},
+	}
+
+	multipartFileNames := []string{
+		"metadata.json.gz",
+		"gps.csv.gz",
+		"accelerometer.csv.gz",
+		"gyroscope.csv.gz",
+		"magnetometer.csv.gz",
+	}
+
+	exampleTrackFiles := exampleTracks[rand.Intn(len(exampleTracks))]
+
+	url := fmt.Sprintf("https://%s/", deployment.BaseUrl())
+	url += "/tracking-service/tracks/post/"
+
+	// Send files as multipart form data
+	var b bytes.Buffer
+	w := multipart.NewWriter(&b)
+	for idx, file := range exampleTrackFiles {
+		f, err := os.Open(fmt.Sprintf("tracking/%s", file))
+		if err != nil {
+			panic(err)
+		}
+		defer f.Close()
+
+		fw, err := w.CreateFormFile("file", multipartFileNames[idx])
+		if err != nil {
+			panic(err)
+		}
+
+		if _, err = io.Copy(fw, f); err != nil {
+			panic(err)
+		}
+	}
+	w.Close()
+
+	req, err := http.NewRequest("POST", url, &b)
+	if err != nil {
+		panic(err)
+	}
+	req.Header.Set("Content-Type", w.FormDataContentType())
+
+	client := &http.Client{Timeout: common.Timeout}
+	resp, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+
+	if resp.StatusCode != 200 {
+		panic(fmt.Sprintf("Failed to send track: %s", resp.Status))
+	}
+
+	defer resp.Body.Close()
+}
