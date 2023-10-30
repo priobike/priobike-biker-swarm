@@ -21,13 +21,21 @@ func SubscribeToRandomConnection(deployment common.Deployment, predictionMode co
 	json.Unmarshal(thingNamesFile, &thingNames)
 	randomThing := thingNames[rand.Intn(len(thingNames))]
 	mqttUrl := "tcp://"
+	var username string
+	var password string
 	if predictionMode == common.PredictionService {
 		mqttUrl += deployment.PredictionServiceMqttUrl() + ":" + strconv.Itoa(deployment.PredictionServiceMqttPort())
+		username = deployment.PredictionServiceMqttUsername()
+		password = deployment.PredictionServiceMqttPassword()
 	} else if predictionMode == common.Predictor {
 		mqttUrl += deployment.PredictorMqttUrl() + ":" + strconv.Itoa(deployment.PredictorMqttPort())
+		username = deployment.PredictorMqttUsername()
+		password = deployment.PredictorMqttPassword()
 	}
 
 	opts := mqtt.NewClientOptions()
+	opts.SetUsername(username)
+	opts.SetPassword(password)
 	opts.AddBroker(mqttUrl)
 	opts.SetConnectTimeout(common.Timeout)
 	opts.SetConnectionLostHandler(func(client mqtt.Client, err error) {
@@ -53,9 +61,12 @@ func SubscribeToRandomConnection(deployment common.Deployment, predictionMode co
 		panic(token.Error())
 	}
 
-	time.Sleep(20 * time.Second)
+	println("Subscribed to " + randomThing)
+
+	time.Sleep(10 * time.Second)
 	if token := client.Unsubscribe(randomThing); token.Wait() && token.Error() != nil {
 		panic(token.Error())
 	}
 	client.Disconnect(0)
+	println("Unsubscribed from " + randomThing)
 }

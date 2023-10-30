@@ -19,6 +19,9 @@ func FetchNews(deployment common.Deployment) {
 	json.Unmarshal(responseBody, &newsArticles)
 
 	for _, newsArticle := range newsArticles {
+		if newsArticle.CategoryId == 0 {
+			continue
+		}
 		urlCategory := "https://" + deployment.BaseUrl() + "/news-service/news/category/" + strconv.Itoa(newsArticle.CategoryId)
 		common.Get(urlCategory, "News Category")
 	}

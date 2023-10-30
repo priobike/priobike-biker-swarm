@@ -6,16 +6,21 @@ import (
 	"os"
 	"time"
 
+	"github.com/priobike/priobike-biker-swarm/answers"
 	"github.com/priobike/priobike-biker-swarm/common"
+	"github.com/priobike/priobike-biker-swarm/discomforts"
 	"github.com/priobike/priobike-biker-swarm/graphhopper"
+	"github.com/priobike/priobike-biker-swarm/layers"
+	"github.com/priobike/priobike-biker-swarm/news"
 	"github.com/priobike/priobike-biker-swarm/photon"
+	"github.com/priobike/priobike-biker-swarm/predictions"
 	"github.com/priobike/priobike-biker-swarm/sgselector"
+	"github.com/priobike/priobike-biker-swarm/status"
+	"github.com/priobike/priobike-biker-swarm/tracking"
+	"github.com/priobike/priobike-biker-swarm/traffic"
 )
 
 func main() {
-	// Wait a random amount of time between 0 and 10 seconds.
-	time.Sleep(time.Duration(rand.Intn(10)) * time.Second)
-
 	// Load the environment variable "DEPLOYMENT" from the env.
 	deploymentString := os.Getenv("DEPLOYMENT")
 	var deployment common.Deployment
@@ -34,28 +39,43 @@ func main() {
 		deployment = common.Production
 	}
 
-	routingEngine := common.GraphHopper
+	// Wait a random amount of time between 0 and 20 seconds.
+	time.Sleep(time.Duration(rand.Intn(20)) * time.Second)
 
-	/*
-		Service Order:
-		1. Weather
-		2. Status Monitor Summary
-		3. Status Monitor History
-		4. (Opt. Map Data (Air, Repair, Rent))
-		5. (Opt. News)
-		6. Randum Number of Map Data (Rent, Park, Construction, Air, Repair, Dangers, Green Wave, Veloroutes)
-		7. Traffic
-		8. Photon (Search and Geocode)
-		9. Route
-		10. Signal Groups
-		11. Discomforts
-		12. Random Subscriptions on SGs
-		13. Tracking
-		14. (Opt. Feedback)
-	*/
+	routingEngines := []common.RoutingEngine{common.GraphHopper, common.GraphHopperDrn}
+	predictionModes := []common.PredictionMode{common.PredictionService, common.Predictor}
+	routingEngine := routingEngines[rand.Intn(len(routingEngines))]
+	predictionMode := predictionModes[rand.Intn(len(predictionModes))]
 
-	// Fetch a random route.
-	routeResponse := graphhopper.FetchRandomRoute(deployment, routingEngine)
+	// Fetch the weather. (leave out for now because it's not our API/service)
+	// weather.FetchWeather(deployment)
+
+	// Fetch the status monitor summary.
+	status.FetchStatusSummary(deployment, predictionMode)
+
+	// Fetch the status monitor history.
+	status.FetchStatusHistory(deployment)
+
+	// Fetch the map data (home view).
+	layers.FetchMapData(deployment, layers.Rental)
+	layers.FetchMapData(deployment, layers.Air)
+	layers.FetchMapData(deployment, layers.Repair)
+
+	// Fetch the news.
+	news.FetchNews(deployment)
+
+	// Fetch the map data (map view).
+	layers.FetchMapData(deployment, layers.Rental)
+	layers.FetchMapData(deployment, layers.Parking)
+	layers.FetchMapData(deployment, layers.Construction)
+	layers.FetchMapData(deployment, layers.Air)
+	layers.FetchMapData(deployment, layers.Repair)
+	layers.FetchMapData(deployment, layers.Accidents)
+	layers.FetchMapData(deployment, layers.GreenWave)
+	layers.FetchMapData(deployment, layers.Veloroutes)
+
+	// Fetch the traffic.
+	traffic.FetchCurrentTraffic(deployment)
 
 	// Fetch a random location, for a random number of tries between 2 and 10.
 	for i := 0; i < rand.Intn(8)+2; i++ {
@@ -63,9 +83,30 @@ func main() {
 		photon.ReverseGeocode(deployment)
 	}
 
+	// Fetch a random route.
+	routeResponse := graphhopper.FetchRandomRoute(deployment, routingEngine)
+
 	// For each route path, fetch the signal groups
 	for _, path := range routeResponse.Paths {
 		// Fetch a sg selector request.
 		sgselector.FetchSgSelector(deployment, path, routingEngine)
 	}
+
+	// For each route path, fetch the discomforts.
+	for _, path := range routeResponse.Paths {
+		// Fetch a discomfort request.
+		discomforts.FetchDiscomforts(deployment, path)
+	}
+
+	// Subscribe to a random number of predictions.
+	for i := 0; i < rand.Intn(8)+2; i++ {
+		// Fetch a random prediction.
+		predictions.SubscribeToRandomConnection(deployment, predictionMode)
+	}
+
+	// Send tracking data.
+	tracking.SendRandomTrack(deployment)
+
+	// Send the feedback.
+	answers.SendRandomAnswer(deployment)
 }

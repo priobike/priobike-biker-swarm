@@ -53,7 +53,7 @@ func SendRandomTrack(deployment common.Deployment) {
 		}
 		defer f.Close()
 
-		fw, err := w.CreateFormFile("file", multipartFileNames[idx])
+		fw, err := w.CreateFormFile(multipartFileNames[idx], multipartFileNames[idx])
 		if err != nil {
 			panic(err)
 		}
@@ -77,8 +77,15 @@ func SendRandomTrack(deployment common.Deployment) {
 	}
 
 	if resp.StatusCode != 200 {
+		// Print body
+		buf := new(bytes.Buffer)
+		buf.ReadFrom(resp.Body)
+		body := buf.String()
+		fmt.Println(body)
 		panic(fmt.Sprintf("Failed to send track: %s", resp.Status))
 	}
 
 	defer resp.Body.Close()
+
+	fmt.Println("Tracking-Service Post Track"+" status:", resp.Status)
 }

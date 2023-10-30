@@ -163,7 +163,7 @@ func (w Deployment) String() string {
 }
 
 func (w Deployment) BaseUrl() string {
-	return []string{"priobike.vkw.tu-dresden.de/production", "priobike.vkw.tu-dresden.de/staging", "priobike-release.inf.tu-dresden.de"}[w]
+	return []string{"priobike.vkw.tu-dresden.de/staging", "priobike.vkw.tu-dresden.de/production", "priobike-release.inf.tu-dresden.de"}[w]
 }
 
 type PredictionMode int

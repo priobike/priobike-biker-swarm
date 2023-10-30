@@ -13,6 +13,6 @@ func FetchStatusHistory(deployment common.Deployment) {
 	urlDay := "https://" + deployment.BaseUrl() + "/" + predictionService.StatusProviderSubPath() + "/day-history.json"
 	urlWeek := "https://" + deployment.BaseUrl() + "/" + predictionService.StatusProviderSubPath() + "/week-history.json"
 
-	common.Get(urlDay, "Status History")
-	common.Get(urlWeek, "Status History")
+	common.Get(urlDay, "Status History Day")
+	common.Get(urlWeek, "Status History Week")
 }
