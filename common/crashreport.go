@@ -31,7 +31,7 @@ func ReportCrash(errorMsg string, startTime time.Time) {
 
 	jsonAnswer, err := json.Marshal(crashReport)
 	if err != nil {
-		panic(err)
+		panic("Crashreport: " + err.Error())
 	}
 
 	PostJson(localurl, "biker-swarm-monitor post answer", bytes.NewBuffer(jsonAnswer))

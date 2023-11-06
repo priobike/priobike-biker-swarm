@@ -19,7 +19,7 @@ func Get(url string, serviceName string) []byte {
 	fmt.Println(serviceName+" status:", response.Status)
 	if response.StatusCode != 200 {
 		io.Copy(os.Stdout, response.Body)
-		panic(serviceName + " request failed")
+		panic(serviceName + ": request failed")
 	}
 	body, err := io.ReadAll(response.Body)
 	if err != nil {
