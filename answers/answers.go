@@ -34,7 +34,7 @@ func SendRandomAnswer(deployment common.Deployment) {
 
 	jsonAnswer, err := json.Marshal(randomAnswer)
 	if err != nil {
-		panic(err)
+		panic("Tracking-Service Post Answer: " + err.Error())
 	}
 
 	common.PostJson(url, "Tracking-Service Post Answer", bytes.NewBuffer(jsonAnswer))

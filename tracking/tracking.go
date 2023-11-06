@@ -49,31 +49,31 @@ func SendRandomTrack(deployment common.Deployment) {
 	for idx, file := range exampleTrackFiles {
 		f, err := os.Open(fmt.Sprintf("tracking/%s", file))
 		if err != nil {
-			panic(err)
+			panic("Tracking: " + err.Error())
 		}
 		defer f.Close()
 
 		fw, err := w.CreateFormFile(multipartFileNames[idx], multipartFileNames[idx])
 		if err != nil {
-			panic(err)
+			panic("Tracking: " + err.Error())
 		}
 
 		if _, err = io.Copy(fw, f); err != nil {
-			panic(err)
+			panic("Tracking: " + err.Error())
 		}
 	}
 	w.Close()
 
 	req, err := http.NewRequest("POST", url, &b)
 	if err != nil {
-		panic(err)
+		panic("Tracking: " + err.Error())
 	}
 	req.Header.Set("Content-Type", w.FormDataContentType())
 
 	client := &http.Client{Timeout: common.Timeout}
 	resp, err := client.Do(req)
 	if err != nil {
-		panic(err)
+		panic("Tracking: " + err.Error())
 	}
 
 	if resp.StatusCode != 200 {
@@ -82,7 +82,7 @@ func SendRandomTrack(deployment common.Deployment) {
 		buf.ReadFrom(resp.Body)
 		body := buf.String()
 		fmt.Println(body)
-		panic(fmt.Sprintf("Failed to send track: %s", resp.Status))
+		panic(fmt.Sprintf("Tracking: Failed to send track: %s", resp.Status))
 	}
 
 	defer resp.Body.Close()

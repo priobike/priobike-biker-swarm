@@ -30,7 +30,7 @@ func FetchDiscomforts(deployment common.Deployment, ghPath graphhopper.RouteResp
 
 	discomfortsReqJson, err := json.MarshalIndent(discomfortsRequest, "", "  ")
 	if err != nil {
-		panic(err)
+		panic("Discomforts: " + err.Error())
 	}
 	// Send the request.
 	common.PostJson(url, "Discomforts", bytes.NewBuffer(discomfortsReqJson))
