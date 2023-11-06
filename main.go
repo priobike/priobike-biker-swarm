@@ -42,6 +42,17 @@ func main() {
 	// Wait a random amount of time between 0 and 20 seconds.
 	time.Sleep(time.Duration(rand.Intn(20)) * time.Second)
 
+	// The start time of the test.
+	startTime := time.Now()
+
+	// Catches a panic and reports a crash. Then end with a panic.
+	defer func() {
+		if err := recover(); err != nil {
+			common.ReportCrash(err.(string), startTime)
+			panic("Error reported and shutting down.")
+		}
+	}()
+
 	routingEngines := []common.RoutingEngine{common.GraphHopper, common.GraphHopperDrn}
 	predictionModes := []common.PredictionMode{common.PredictionService, common.Predictor}
 	routingEngine := routingEngines[rand.Intn(len(routingEngines))]

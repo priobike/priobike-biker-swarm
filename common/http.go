@@ -13,7 +13,7 @@ func Get(url string, serviceName string) []byte {
 	}
 	response, err := client.Get(url)
 	if err != nil {
-		panic(err)
+		panic(serviceName + ": " + err.Error())
 	}
 	defer response.Body.Close()
 	fmt.Println(serviceName+" status:", response.Status)
@@ -23,7 +23,7 @@ func Get(url string, serviceName string) []byte {
 	}
 	body, err := io.ReadAll(response.Body)
 	if err != nil {
-		panic(err)
+		panic(serviceName + ": " + err.Error())
 	}
 	return body
 }
@@ -34,7 +34,7 @@ func PostJson(url string, serviceName string, requestBody io.Reader) []byte {
 	}
 	response, requestErr := client.Post(url, "application/json", requestBody)
 	if requestErr != nil {
-		panic(requestErr)
+		panic(serviceName + ": " + requestErr.Error())
 	}
 	defer response.Body.Close()
 	fmt.Println(serviceName+" status:", response.Status)
@@ -44,7 +44,7 @@ func PostJson(url string, serviceName string, requestBody io.Reader) []byte {
 	}
 	responseBody, responseErr := io.ReadAll(response.Body)
 	if responseErr != nil {
-		panic(responseErr)
+		panic(serviceName + ": " + requestErr.Error())
 	}
 	return responseBody
 }
