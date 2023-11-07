@@ -43,7 +43,7 @@ func (w LayerMapData) String() string {
 	}[w]
 }
 
-func FetchMapData(deployment common.Deployment, layer LayerMapData) {
+func  FetchMapData(deployment common.Deployment, layer LayerMapData) {
 	url := "https://" + deployment.BaseUrl() + "/map-data/" + layer.FilePath()
 
 	common.Get(url, "Map Data "+layer.String())

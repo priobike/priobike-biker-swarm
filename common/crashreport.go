@@ -8,23 +8,25 @@ import (
 )
 
 type CrashReport struct {
-	StartTime int64  `json:"startTime"`
-	CrashTime int64  `json:"crashTime"`
-	ErrorMsg  string `json:"errorMsg"`
+	StartTime		int64	 	`json:"startTime"`
+	CrashTime		int64	 	`json:"crashTime"`
+	ErrorMsg 	 	string	 	`json:"errorMsg"`
+	ServiceName 	string		`json:"serviceName"`
 }
 
 // Func that sends timestamps and the error msg to the biker swarm monitor.
-func ReportCrash(errorMsg string, startTime time.Time) {
+func ReportCrash(serviceName string, errorMsg string, startTime time.Time) {
 	//  Send crash report.
 
-	// url := "https://priobike.vkw.tu-dresden.de/staging/biker-swarm-monitor/crashReports/post/"
+	url := "https://priobike.vkw.tu-dresden.de/staging/biker-swarm-monitor/crashReports/post/"
 
-	localurl := "http://localhost/production/biker-swarm-monitor/crashReports/post/"
+	// localurl := "http://localhost/production/biker-swarm-monitor/crashReports/post/"
 
 	crashReport := CrashReport{
 		StartTime: startTime.Unix(),
 		CrashTime: time.Now().Unix(),
 		ErrorMsg:  errorMsg,
+		ServiceName: serviceName,
 	}
 
 	fmt.Println(crashReport)
@@ -34,5 +36,5 @@ func ReportCrash(errorMsg string, startTime time.Time) {
 		panic("Crashreport: " + err.Error())
 	}
 
-	PostJson(localurl, "biker-swarm-monitor post answer", bytes.NewBuffer(jsonAnswer))
+	PostJson(url, "biker-swarm-monitor post answer", bytes.NewBuffer(jsonAnswer))
 }

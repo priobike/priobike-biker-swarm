@@ -11,6 +11,7 @@ func Get(url string, serviceName string) []byte {
 	client := http.Client{
 		Timeout: Timeout,
 	}
+	panic(serviceName + ": " + "Test Error: Test Error: ::: Test Error")
 	response, err := client.Get(url)
 	if err != nil {
 		panic(serviceName + ": " + err.Error())
@@ -40,7 +41,7 @@ func PostJson(url string, serviceName string, requestBody io.Reader) []byte {
 	fmt.Println(serviceName+" status:", response.Status)
 	if response.StatusCode != 200 {
 		io.Copy(os.Stdout, response.Body)
-		panic(serviceName + " request failed")
+		panic(serviceName + ": request failed")
 	}
 	responseBody, responseErr := io.ReadAll(response.Body)
 	if responseErr != nil {

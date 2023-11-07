@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math/rand"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/priobike/priobike-biker-swarm/answers"
@@ -48,8 +49,13 @@ func main() {
 	// Catches a panic and reports a crash. Then end with a panic.
 	defer func() {
 		if err := recover(); err != nil {
-			common.ReportCrash(err.(string), startTime)
-			panic("Error reported and shutting down.")
+			serviceNameErrorMsg := strings.Split(err.(string), ":")
+			if len(serviceNameErrorMsg) >= 2 {
+				errorMsg := strings.Join(serviceNameErrorMsg[1:], ":")
+				errorMsg = strings.TrimSpace(errorMsg)
+				common.ReportCrash(serviceNameErrorMsg[0], errorMsg, startTime)
+				panic("Error reported and shutting down.")
+			}
 		}
 	}()
 

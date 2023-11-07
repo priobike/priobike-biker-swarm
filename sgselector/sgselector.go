@@ -79,7 +79,7 @@ func FetchSgSelector(deployment common.Deployment, ghPath graphhopper.RouteRespo
 	sgRequest.Descend = ghPath.Descend
 	sgRequest.EstimatedArr = ghPath.Time
 
-	serviceName := "SG Selector, Matcher: " + matcher + ", Routing: " + routingEngine.String()
+	serviceName := "SG Selector, Matcher " + matcher + ", Routing " + routingEngine.String()
 
 	sgReqJson, err := json.MarshalIndent(sgRequest, "", "  ")
 	if err != nil {
