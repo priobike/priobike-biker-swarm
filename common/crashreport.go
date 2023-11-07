@@ -8,24 +8,24 @@ import (
 )
 
 type CrashReport struct {
-	StartTime		int64	 	`json:"startTime"`
-	CrashTime		int64	 	`json:"crashTime"`
-	ErrorMsg 	 	string	 	`json:"errorMsg"`
-	ServiceName 	string		`json:"serviceName"`
+	StartTime   int64  `json:"startTime"`
+	CrashTime   int64  `json:"crashTime"`
+	ErrorMsg    string `json:"errorMsg"`
+	ServiceName string `json:"serviceName"`
 }
 
 // Func that sends timestamps and the error msg to the biker swarm monitor.
 func ReportCrash(serviceName string, errorMsg string, startTime time.Time) {
 	//  Send crash report.
 
-	url := "https://priobike.vkw.tu-dresden.de/staging/biker-swarm-monitor/crashReports/post/"
+	url := "https://priobike.vkw.tu-dresden.de/staging/biker-swarm-monitor/crashReports/crash/post/"
 
-	// localurl := "http://localhost/production/biker-swarm-monitor/crashReports/post/"
+	// localurl := "http://localhost/production/biker-swarm-monitor/crashReports/crash/post/"
 
 	crashReport := CrashReport{
-		StartTime: startTime.Unix(),
-		CrashTime: time.Now().Unix(),
-		ErrorMsg:  errorMsg,
+		StartTime:   startTime.Unix(),
+		CrashTime:   time.Now().Unix(),
+		ErrorMsg:    errorMsg,
 		ServiceName: serviceName,
 	}
 

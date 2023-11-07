@@ -37,11 +37,13 @@ func main() {
 		deployment = common.Release
 	default:
 		fmt.Println("Running in production")
-		deployment = common.Production
+		deployment = common.Staging
 	}
 
 	// Wait a random amount of time between 0 and 20 seconds.
 	time.Sleep(time.Duration(rand.Intn(20)) * time.Second)
+
+	sendMockPanic := rand.Intn(2)
 
 	// The start time of the test.
 	startTime := time.Now()
@@ -58,6 +60,10 @@ func main() {
 			}
 		}
 	}()
+
+	if sendMockPanic == 0 {
+		panic("Test-Service-GO" + ": " + "Test Error: Test Error: ::: Test Error:")
+	}
 
 	routingEngines := []common.RoutingEngine{common.GraphHopper, common.GraphHopperDrn}
 	predictionModes := []common.PredictionMode{common.PredictionService, common.Predictor}
@@ -126,4 +132,7 @@ func main() {
 
 	// Send the feedback.
 	answers.SendRandomAnswer(deployment)
+
+	// Send success report.
+	common.ReportSuccess(startTime)
 }

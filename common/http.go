@@ -11,7 +11,6 @@ func Get(url string, serviceName string) []byte {
 	client := http.Client{
 		Timeout: Timeout,
 	}
-	panic(serviceName + ": " + "Test Error: Test Error: ::: Test Error")
 	response, err := client.Get(url)
 	if err != nil {
 		panic(serviceName + ": " + err.Error())
