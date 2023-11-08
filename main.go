@@ -37,7 +37,7 @@ func main() {
 		deployment = common.Release
 	default:
 		fmt.Println("Running in production")
-		deployment = common.Staging
+		deployment = common.Production
 	}
 
 	// Wait a random amount of time between 0 and 20 seconds.
@@ -51,10 +51,15 @@ func main() {
 	// Catches a panic and reports a crash. Then end with a panic.
 	defer func() {
 		if err := recover(); err != nil {
+			// Split into service name and error msg.
 			serviceNameErrorMsg := strings.Split(err.(string), ":")
 			if len(serviceNameErrorMsg) >= 2 {
+				// Join error msg in case there are ":" in the message.
 				errorMsg := strings.Join(serviceNameErrorMsg[1:], ":")
 				errorMsg = strings.TrimSpace(errorMsg)
+				// Escape '\', '"' and '\n' in error msg string.
+				replacer := strings.NewReplacer("\\", " ", "\"", " ", "\n", " ")
+				errorMsg = replacer.Replace(errorMsg)
 				common.ReportCrash(serviceNameErrorMsg[0], errorMsg, startTime)
 				panic("Error reported and shutting down.")
 			}
@@ -62,7 +67,7 @@ func main() {
 	}()
 
 	if sendMockPanic == 0 {
-		panic("Test-Service-GO" + ": " + "Test Error: Test Error: ::: Test Error:")
+		panic("Test-Service-GO" + ": " + "Hello \n path:\\something\\other: \" ERROR 2\"")
 	}
 
 	routingEngines := []common.RoutingEngine{common.GraphHopper, common.GraphHopperDrn}
