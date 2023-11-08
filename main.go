@@ -48,7 +48,7 @@ func main() {
 	// The start time of the test.
 	startTime := time.Now()
 
-	// Catches a panic and reports a crash. Then end with a panic.
+	// Catches a panic and reports a crash. Then ends with a panic.
 	defer func() {
 		if err := recover(); err != nil {
 			// Split into service name and error msg.
