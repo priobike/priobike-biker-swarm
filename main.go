@@ -43,8 +43,6 @@ func main() {
 	// Wait a random amount of time between 0 and 20 seconds.
 	time.Sleep(time.Duration(rand.Intn(20)) * time.Second)
 
-	sendMockPanic := rand.Intn(2)
-
 	// The start time of the test.
 	startTime := time.Now()
 
@@ -65,10 +63,6 @@ func main() {
 			}
 		}
 	}()
-
-	if sendMockPanic == 0 {
-		panic("Test-Service-GO" + ": " + "Hello \n path:\\something\\other: \" ERROR 2\"")
-	}
 
 	routingEngines := []common.RoutingEngine{common.GraphHopper, common.GraphHopperDrn}
 	predictionModes := []common.PredictionMode{common.PredictionService, common.Predictor}
