@@ -14,11 +14,10 @@ type CrashReport struct {
 	ServiceName string `json:"serviceName"`
 }
 
-// Func that sends timestamps and the error msg to the biker swarm monitor.
-func ReportCrash(serviceName string, errorMsg string, startTime time.Time) {
-	//  Send crash report.
+// Func that sends a crash report to the biker swarm monitor.
+func ReportCrash(deployment Deployment, serviceName string, errorMsg string, startTime time.Time) {
 
-	url := "https://priobike.vkw.tu-dresden.de/staging/biker-swarm-monitor/crashReports/crash/post/"
+	url := "https://" + deployment.BaseUrl() + "/biker-swarm-monitor/crashReports/crash/post/"
 
 	// localurl := "http://localhost/production/biker-swarm-monitor/crashReports/crash/post/"
 

@@ -12,11 +12,10 @@ type SuccessReport struct {
 	EndTime   int64 `json:"endTime"`
 }
 
-// Func that sends timestamps and the error msg to the biker swarm monitor.
-func ReportSuccess(startTime time.Time) {
-	//  Send crash report.
+// Func that sends a success report to the biker swarm monitor.
+func ReportSuccess(deployment Deployment, startTime time.Time) {
 
-	url := "https://priobike.vkw.tu-dresden.de/staging/biker-swarm-monitor/crashReports/success/post/"
+	url := "https://" + deployment.BaseUrl() + "/biker-swarm-monitor/crashReports/success/post/"
 
 	// localurl := "http://localhost/production/biker-swarm-monitor/crashReports/success/post/"
 

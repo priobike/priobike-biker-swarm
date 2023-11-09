@@ -58,7 +58,7 @@ func main() {
 				// Escape '\', '"' and '\n' in error msg string.
 				replacer := strings.NewReplacer("\\", " ", "\"", " ", "\n", " ")
 				errorMsg = replacer.Replace(errorMsg)
-				common.ReportCrash(serviceNameErrorMsg[0], errorMsg, startTime)
+				common.ReportCrash(deployment, serviceNameErrorMsg[0], errorMsg, startTime)
 				panic("Error reported and shutting down.")
 			}
 		}
@@ -133,5 +133,5 @@ func main() {
 	answers.SendRandomAnswer(deployment)
 
 	// Send success report.
-	common.ReportSuccess(startTime)
+	common.ReportSuccess(deployment, startTime)
 }
