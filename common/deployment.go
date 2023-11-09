@@ -89,8 +89,8 @@ func (w Deployment) Center() Location {
 func (w Deployment) BoundingBox() BoundingBox {
 	return []BoundingBox{
 		{MinLat: 50.9, MaxLat: 51.2, MinLon: 13.5, MaxLon: 14.0},
-		{MinLat: 53.35, MaxLat: 53.75, MinLon: 9.65, MaxLon: 10.4},
-		{MinLat: 53.35, MaxLat: 53.75, MinLon: 9.65, MaxLon: 10.4},
+		{MinLat: 53.47, MaxLat: 53.59, MinLon: 9.95, MaxLon: 10.13},
+		{MinLat: 53.47, MaxLat: 53.59, MinLon: 9.95, MaxLon: 10.13},
 	}[w]
 }
 
