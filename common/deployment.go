@@ -177,6 +177,10 @@ func (w PredictionMode) StatusProviderSubPath() string {
 	return []string{"prediction-monitor-nginx", "predictor-nginx/status"}[w]
 }
 
+func (w PredictionMode) String() string {
+	return []string{"PredictionService", "Predictor"}[w]
+}
+
 type RoutingEngine int
 
 const (
@@ -185,7 +189,7 @@ const (
 )
 
 func (w RoutingEngine) String() string {
-	return []string{"graphhopper", "drn-graphhopper"}[w]
+	return []string{"Graphhopper", "Graphhopper-DRN"}[w]
 }
 
 func (w RoutingEngine) Path() string {

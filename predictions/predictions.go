@@ -16,7 +16,7 @@ func SubscribeToRandomConnection(deployment common.Deployment, predictionMode co
 	thingNames := []string{}
 	thingNamesFile, err := os.ReadFile("predictions/thingNames.json")
 	if err != nil {
-		panic("Predictions: " + err.Error())
+		panic("Predictions " + predictionMode.String() + ": " + err.Error())
 	}
 	json.Unmarshal(thingNamesFile, &thingNames)
 	randomThing := thingNames[rand.Intn(len(thingNames))]
@@ -39,7 +39,7 @@ func SubscribeToRandomConnection(deployment common.Deployment, predictionMode co
 	opts.AddBroker(mqttUrl)
 	opts.SetConnectTimeout(common.Timeout)
 	opts.SetConnectionLostHandler(func(client mqtt.Client, err error) {
-		panic("Predictions: " + err.Error())
+		panic("Predictions " + predictionMode.String() + ": " + err.Error())
 	})
 	randSource := rand.NewSource(time.Now().UnixNano())
 	random := rand.New(randSource)
@@ -47,25 +47,25 @@ func SubscribeToRandomConnection(deployment common.Deployment, predictionMode co
 	opts.SetClientID(clientID)
 	opts.SetOrderMatters(false)
 	opts.SetDefaultPublishHandler(func(client mqtt.Client, msg mqtt.Message) {
-		panic("Predictions: Unexpected MQTT message")
+		panic("Predictions " + predictionMode.String() + ": " + "Unexpected MQTT message")
 	})
 	client := mqtt.NewClient(opts)
 	if conn := client.Connect(); conn.Wait() && conn.Error() != nil {
-		panic("Predictions: " + conn.Error().Error())
+		panic("Predictions " + predictionMode.String() + ": " + conn.Error().Error())
 	}
 
 	// Subscribe to the datastream.
 	if token := client.Subscribe(randomThing, 0, func(client mqtt.Client, msg mqtt.Message) {
 		// Do nothing
 	}); token.Wait() && token.Error() != nil {
-		panic("Predictions: " + token.Error().Error())
+		panic("Predictions " + predictionMode.String() + ": " + token.Error().Error())
 	}
 
 	println("Subscribed to " + randomThing)
 
 	time.Sleep(10 * time.Second)
 	if token := client.Unsubscribe(randomThing); token.Wait() && token.Error() != nil {
-		panic("Predictions: " + token.Error().Error())
+		panic("Predictions " + predictionMode.String() + ": " + token.Error().Error())
 	}
 	client.Disconnect(0)
 	println("Unsubscribed from " + randomThing)

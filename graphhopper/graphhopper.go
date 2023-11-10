@@ -63,7 +63,7 @@ func FetchRandomRoute(deployment common.Deployment, routingEngine common.Routing
 	ghRoute := RouteResponse{}
 	jsonErr := json.Unmarshal(responseBody, &ghRoute)
 	if jsonErr != nil {
-		panic("GraphHopper: " + jsonErr.Error())
+		panic(routingEngine.String() + ": " + jsonErr.Error())
 	}
 	return ghRoute
 }
