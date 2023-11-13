@@ -3,7 +3,6 @@ package common
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"time"
 )
 
@@ -23,8 +22,6 @@ func ReportSuccess(deployment Deployment, startTime time.Time) {
 		StartTime: startTime.Unix(),
 		EndTime:   time.Now().Unix(),
 	}
-
-	fmt.Println(successReport)
 
 	jsonAnswer, err := json.Marshal(successReport)
 	if err != nil {

@@ -37,7 +37,7 @@ func main() {
 		deployment = common.Release
 	default:
 		fmt.Println("Running in production")
-		deployment = common.Production
+		deployment = common.Staging
 	}
 
 	// Wait a random amount of time between 0 and 20 seconds.

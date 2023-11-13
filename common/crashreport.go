@@ -3,7 +3,6 @@ package common
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"time"
 )
 
@@ -27,8 +26,6 @@ func ReportCrash(deployment Deployment, serviceName string, errorMsg string, sta
 		ErrorMsg:    errorMsg,
 		ServiceName: serviceName,
 	}
-
-	fmt.Println(crashReport)
 
 	jsonAnswer, err := json.Marshal(crashReport)
 	if err != nil {
