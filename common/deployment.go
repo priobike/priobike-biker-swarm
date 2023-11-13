@@ -104,8 +104,8 @@ func (w Deployment) PredictionServiceMqttUrl() string {
 
 func (w Deployment) PredictionServiceMqttPort() int {
 	return []int{
-		20050,
 		20032,
+		20050,
 		20050,
 	}[w]
 }
