@@ -36,7 +36,7 @@ func main() {
 		fmt.Println("Running in release")
 		deployment = common.Release
 	default:
-		fmt.Println("Running in production")
+		fmt.Println("Running in staging")
 		deployment = common.Staging
 	}
 
