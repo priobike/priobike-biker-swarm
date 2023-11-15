@@ -18,7 +18,7 @@ type DiscomfortsRequest struct {
 
 func FetchDiscomforts(deployment common.Deployment, ghPath graphhopper.RouteResponsePath) {
 	url := fmt.Sprintf("https://%s/", deployment.BaseUrl())
-	url += "/dangers-service/dangers/match/"
+	url += "dangers-service/dangers/match/"
 	// Create a request body.
 	discomfortsRequest := DiscomfortsRequest{}
 	for _, point := range ghPath.Points.Coordinates {

@@ -9,7 +9,7 @@ import (
 
 func Get(url string, serviceName string) []byte {
 	client := http.Client{
-		Timeout: Timeout,
+		Timeout: Timeout(),
 	}
 	response, err := client.Get(url)
 	if err != nil {
@@ -30,7 +30,7 @@ func Get(url string, serviceName string) []byte {
 
 func PostJson(url string, serviceName string, requestBody io.Reader) []byte {
 	client := http.Client{
-		Timeout: Timeout,
+		Timeout: Timeout(),
 	}
 	response, requestErr := client.Post(url, "application/json", requestBody)
 	if requestErr != nil {
