@@ -70,7 +70,7 @@ func SendRandomTrack(deployment common.Deployment) {
 	}
 	req.Header.Set("Content-Type", w.FormDataContentType())
 
-	client := &http.Client{Timeout: common.Timeout}
+	client := &http.Client{Timeout: common.Timeout()}
 	resp, err := client.Do(req)
 	if err != nil {
 		panic("Tracking: " + err.Error())

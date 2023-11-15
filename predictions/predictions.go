@@ -37,7 +37,7 @@ func SubscribeToRandomConnection(deployment common.Deployment, predictionMode co
 	opts.SetUsername(username)
 	opts.SetPassword(password)
 	opts.AddBroker(mqttUrl)
-	opts.SetConnectTimeout(common.Timeout)
+	opts.SetConnectTimeout(common.Timeout())
 	opts.SetConnectionLostHandler(func(client mqtt.Client, err error) {
 		panic("Predictions " + predictionMode.String() + ": " + err.Error())
 	})
