@@ -41,7 +41,9 @@ func SendRandomTrack(deployment common.Deployment) {
 	exampleTrackFiles := exampleTracks[rand.Intn(len(exampleTracks))]
 
 	url := fmt.Sprintf("https://%s/", deployment.BaseUrl())
-	url += "/tracking-service/tracks/post/"
+	url += "tracking-service/tracks/post/"
+
+	print(url)
 
 	// Send files as multipart form data
 	var b bytes.Buffer

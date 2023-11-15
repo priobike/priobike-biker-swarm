@@ -19,7 +19,7 @@ type Answer struct {
 
 func SendRandomAnswer(deployment common.Deployment) {
 	url := fmt.Sprintf("https://%s/", deployment.BaseUrl())
-	url += "/tracking-service/answers/post/"
+	url += "tracking-service/answers/post/"
 
 	randomUserId := fmt.Sprintf("Biker-Swarm: %d", rand.Intn(1000))
 	randomSessionId := fmt.Sprintf("%d", rand.Intn(1000))
