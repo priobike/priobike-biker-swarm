@@ -19,14 +19,14 @@ const (
 
 func (w LayerMapData) FilePath() string {
 	return []string{
-		"bicycle_rental.geojson",
-		"bicycle_parking.geojson",
-		"construction_sites.geojson",
-		"bike_air_station.geojson",
-		"bicycle_shop.geojson",
-		"accident_hot_spots.geojson",
-		"static_green_waves.geojson",
-		"velo_routes.geojson",
+		"bicycle_rental_v2.geojson",
+		"bicycle_parking_v2.geojson",
+		"construction_sites_v2.geojson",
+		"bike_air_station_v2.geojson",
+		"bicycle_shop_v2.geojson",
+		"accident_hot_spots_v2.geojson",
+		"static_green_waves_v2.geojson",
+		"velo_routes_v2.geojson",
 	}[w]
 }
 

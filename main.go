@@ -9,7 +9,6 @@ import (
 
 	"github.com/priobike/priobike-biker-swarm/answers"
 	"github.com/priobike/priobike-biker-swarm/common"
-	"github.com/priobike/priobike-biker-swarm/discomforts"
 	"github.com/priobike/priobike-biker-swarm/graphhopper"
 	"github.com/priobike/priobike-biker-swarm/layers"
 	"github.com/priobike/priobike-biker-swarm/news"
@@ -44,7 +43,7 @@ func main() {
 	time.Sleep(time.Duration(rand.Intn(20)) * time.Second)
 
 	// The start time of the test.
-	startTime := time.Now()
+	// startTime := time.Now()
 
 	// Catches a panic and reports a crash. Then ends with a panic.
 	defer func() {
@@ -53,12 +52,12 @@ func main() {
 			serviceNameErrorMsg := strings.Split(err.(string), ":")
 			if len(serviceNameErrorMsg) >= 2 {
 				// Join error msg in case there are ":" in the message.
-				errorMsg := strings.Join(serviceNameErrorMsg[1:], ":")
-				errorMsg = strings.TrimSpace(errorMsg)
+				// errorMsg := strings.Join(serviceNameErrorMsg[1:], ":")
+				// errorMsg = strings.TrimSpace(errorMsg)
 				// Escape '\', '"' and '\n' in error msg string.
-				replacer := strings.NewReplacer("\\", " ", "\"", " ", "\n", " ")
-				errorMsg = replacer.Replace(errorMsg)
-				common.ReportCrash(deployment, serviceNameErrorMsg[0], errorMsg, startTime)
+				// replacer := strings.NewReplacer("\\", " ", "\"", " ", "\n", " ")
+				// errorMsg = replacer.Replace(errorMsg)
+				// common.ReportCrash(deployment, serviceNameErrorMsg[0], errorMsg, startTime)
 				panic("Error reported and shutting down.")
 			}
 		}
@@ -76,7 +75,7 @@ func main() {
 	status.FetchStatusSummary(deployment, predictionMode)
 
 	// Fetch the status monitor history.
-	status.FetchStatusHistory(deployment)
+	// status.FetchStatusHistory(deployment)
 
 	// Fetch the map data (home view).
 	layers.FetchMapData(deployment, layers.Rental)
@@ -92,7 +91,7 @@ func main() {
 	layers.FetchMapData(deployment, layers.Construction)
 	layers.FetchMapData(deployment, layers.Air)
 	layers.FetchMapData(deployment, layers.Repair)
-	layers.FetchMapData(deployment, layers.Accidents)
+	// layers.FetchMapData(deployment, layers.Accidents)
 	layers.FetchMapData(deployment, layers.GreenWave)
 	layers.FetchMapData(deployment, layers.Veloroutes)
 
@@ -115,10 +114,10 @@ func main() {
 	}
 
 	// For each route path, fetch the discomforts.
-	for _, path := range routeResponse.Paths {
-		// Fetch a discomfort request.
-		discomforts.FetchDiscomforts(deployment, path)
-	}
+	// for _, path := range routeResponse.Paths {
+	// 	// Fetch a discomfort request.
+	// 	discomforts.FetchDiscomforts(deployment, path)
+	// }
 
 	// Subscribe to a random number of predictions.
 	for i := 0; i < rand.Intn(8)+2; i++ {
@@ -133,5 +132,5 @@ func main() {
 	answers.SendRandomAnswer(deployment)
 
 	// Send success report.
-	common.ReportSuccess(deployment, startTime)
+	// common.ReportSuccess(deployment, startTime)
 }
