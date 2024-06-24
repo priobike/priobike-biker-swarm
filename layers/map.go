@@ -24,7 +24,6 @@ func (w LayerMapData) FilePath() string {
 		"construction_sites_v2.geojson",
 		"bike_air_station_v2.geojson",
 		"bicycle_shop_v2.geojson",
-		"accident_hot_spots_v2.geojson",
 		"static_green_waves_v2.geojson",
 		"velo_routes_v2.geojson",
 	}[w]
@@ -37,13 +36,12 @@ func (w LayerMapData) String() string {
 		"Construction",
 		"Air",
 		"Repair",
-		"Accidents",
 		"GreenWave",
 		"Veloroutes",
 	}[w]
 }
 
-func  FetchMapData(deployment common.Deployment, layer LayerMapData) {
+func FetchMapData(deployment common.Deployment, layer LayerMapData) {
 	url := "https://" + deployment.BaseUrl() + "/map-data/" + layer.FilePath()
 
 	common.Get(url, "Map Data "+layer.String())

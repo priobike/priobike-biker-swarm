@@ -13,6 +13,7 @@ import (
 	"github.com/priobike/priobike-biker-swarm/layers"
 	"github.com/priobike/priobike-biker-swarm/news"
 	"github.com/priobike/priobike-biker-swarm/photon"
+	"github.com/priobike/priobike-biker-swarm/pois"
 	"github.com/priobike/priobike-biker-swarm/predictions"
 	"github.com/priobike/priobike-biker-swarm/sgselector"
 	"github.com/priobike/priobike-biker-swarm/status"
@@ -21,6 +22,9 @@ import (
 )
 
 func main() {
+	// Reporting results is optional and can be configured via the MONITOR_ENDPOINT environment variable. If an endpoint is provided, the results will be reported.
+	reportResults := os.Getenv("REPORT_RESULTS") == "true"
+
 	// Load the environment variable "DEPLOYMENT" from the env.
 	deploymentString := os.Getenv("DEPLOYMENT")
 	var deployment common.Deployment
@@ -43,21 +47,24 @@ func main() {
 	time.Sleep(time.Duration(rand.Intn(20)) * time.Second)
 
 	// The start time of the test.
-	// startTime := time.Now()
+	startTime := time.Now()
 
 	// Catches a panic and reports a crash. Then ends with a panic.
 	defer func() {
+		if !reportResults {
+			return
+		}
 		if err := recover(); err != nil {
 			// Split into service name and error msg.
 			serviceNameErrorMsg := strings.Split(err.(string), ":")
 			if len(serviceNameErrorMsg) >= 2 {
 				// Join error msg in case there are ":" in the message.
-				// errorMsg := strings.Join(serviceNameErrorMsg[1:], ":")
-				// errorMsg = strings.TrimSpace(errorMsg)
+				errorMsg := strings.Join(serviceNameErrorMsg[1:], ":")
+				errorMsg = strings.TrimSpace(errorMsg)
 				// Escape '\', '"' and '\n' in error msg string.
-				// replacer := strings.NewReplacer("\\", " ", "\"", " ", "\n", " ")
-				// errorMsg = replacer.Replace(errorMsg)
-				// common.ReportCrash(deployment, serviceNameErrorMsg[0], errorMsg, startTime)
+				replacer := strings.NewReplacer("\\", " ", "\"", " ", "\n", " ")
+				errorMsg = replacer.Replace(errorMsg)
+				common.ReportCrash(deployment, serviceNameErrorMsg[0], errorMsg, startTime)
 				panic("Error reported and shutting down.")
 			}
 		}
@@ -74,9 +81,6 @@ func main() {
 	// Fetch the status monitor summary.
 	status.FetchStatusSummary(deployment, predictionMode)
 
-	// Fetch the status monitor history.
-	// status.FetchStatusHistory(deployment)
-
 	// Fetch the map data (home view).
 	layers.FetchMapData(deployment, layers.Rental)
 	layers.FetchMapData(deployment, layers.Air)
@@ -91,7 +95,6 @@ func main() {
 	layers.FetchMapData(deployment, layers.Construction)
 	layers.FetchMapData(deployment, layers.Air)
 	layers.FetchMapData(deployment, layers.Repair)
-	// layers.FetchMapData(deployment, layers.Accidents)
 	layers.FetchMapData(deployment, layers.GreenWave)
 	layers.FetchMapData(deployment, layers.Veloroutes)
 
@@ -113,11 +116,11 @@ func main() {
 		sgselector.FetchSgSelector(deployment, path, routingEngine)
 	}
 
-	// For each route path, fetch the discomforts.
-	// for _, path := range routeResponse.Paths {
-	// 	// Fetch a discomfort request.
-	// 	discomforts.FetchDiscomforts(deployment, path)
-	// }
+	// For each route path, fetch the POIs.
+	for _, path := range routeResponse.Paths {
+		// Fetch a POI request.
+		pois.FetchPOIs(deployment, path)
+	}
 
 	// Subscribe to a random number of predictions.
 	for i := 0; i < rand.Intn(8)+2; i++ {
@@ -132,5 +135,7 @@ func main() {
 	answers.SendRandomAnswer(deployment)
 
 	// Send success report.
-	// common.ReportSuccess(deployment, startTime)
+	if reportResults {
+		common.ReportSuccess(deployment, startTime)
+	}
 }

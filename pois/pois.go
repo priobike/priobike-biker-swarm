@@ -1,4 +1,4 @@
-package discomforts
+package pois
 
 import (
 	"bytes"
@@ -9,29 +9,29 @@ import (
 	"github.com/priobike/priobike-biker-swarm/graphhopper"
 )
 
-type DiscomfortsRequest struct {
+type POIsRequest struct {
 	Route []struct {
 		Lat float64 `json:"lat"`
 		Lon float64 `json:"lon"`
 	} `json:"route"`
 }
 
-func FetchDiscomforts(deployment common.Deployment, ghPath graphhopper.RouteResponsePath) {
+func FetchPOIs(deployment common.Deployment, ghPath graphhopper.RouteResponsePath) {
 	url := fmt.Sprintf("https://%s/", deployment.BaseUrl())
-	url += "dangers-service/dangers/match/"
+	url += "poi-service-backend/pois/match"
 	// Create a request body.
-	discomfortsRequest := DiscomfortsRequest{}
+	poisRequest := POIsRequest{}
 	for _, point := range ghPath.Points.Coordinates {
-		discomfortsRequest.Route = append(discomfortsRequest.Route, struct {
+		poisRequest.Route = append(poisRequest.Route, struct {
 			Lat float64 `json:"lat"`
 			Lon float64 `json:"lon"`
 		}{point[1], point[0]})
 	}
 
-	discomfortsReqJson, err := json.MarshalIndent(discomfortsRequest, "", "  ")
+	poisReqJson, err := json.MarshalIndent(poisRequest, "", "  ")
 	if err != nil {
-		panic("Discomforts: " + err.Error())
+		panic("POIs: " + err.Error())
 	}
 	// Send the request.
-	common.PostJson(url, "Discomforts", bytes.NewBuffer(discomfortsReqJson))
+	common.PostJson(url, "POIs", bytes.NewBuffer(poisReqJson))
 }
