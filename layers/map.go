@@ -12,7 +12,6 @@ const (
 	Construction
 	Air
 	Repair
-	Accidents
 	GreenWave
 	Veloroutes
 )
@@ -44,5 +43,5 @@ func (w LayerMapData) String() string {
 func FetchMapData(deployment common.Deployment, layer LayerMapData) {
 	url := "https://" + deployment.BaseUrl() + "/map-data/" + layer.FilePath()
 
-	common.Get(url, "Map Data "+layer.String())
+	common.Get(url, "Map Data "+layer.String(), nil)
 }

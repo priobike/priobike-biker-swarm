@@ -9,10 +9,11 @@ import (
 	"time"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
+	"github.com/priobike/priobike-biker-swarm/auth"
 	"github.com/priobike/priobike-biker-swarm/common"
 )
 
-func SubscribeToRandomConnection(deployment common.Deployment, predictionMode common.PredictionMode) {
+func SubscribeToRandomConnection(deployment common.Deployment, predictionMode common.PredictionMode, authConfig auth.AuthConfig) {
 	thingNames := []string{}
 	thingNamesFile, err := os.ReadFile("predictions/thingNames.json")
 	if err != nil {
@@ -25,12 +26,12 @@ func SubscribeToRandomConnection(deployment common.Deployment, predictionMode co
 	var password string
 	if predictionMode == common.PredictionService {
 		mqttUrl += deployment.PredictionServiceMqttUrl() + ":" + strconv.Itoa(deployment.PredictionServiceMqttPort())
-		username = deployment.PredictionServiceMqttUsername()
-		password = deployment.PredictionServiceMqttPassword()
+		username = authConfig.PredictionServiceMQTTUsername
+		password = authConfig.PredictionServiceMQTTPassword
 	} else if predictionMode == common.Predictor {
 		mqttUrl += deployment.PredictorMqttUrl() + ":" + strconv.Itoa(deployment.PredictorMqttPort())
-		username = deployment.PredictorMqttUsername()
-		password = deployment.PredictorMqttPassword()
+		username = authConfig.PredictorMQTTUsername
+		password = authConfig.PredictorMQTTPassword
 	}
 
 	opts := mqtt.NewClientOptions()

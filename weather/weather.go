@@ -16,5 +16,5 @@ func FetchWeather(deployment common.Deployment) {
 		"&lon=" + fmt.Sprintf("%f", location.Lon) +
 		"&date=" + dateTime
 
-	common.Get(url, "Weather")
+	common.Get(url, "Weather", nil)
 }

@@ -58,7 +58,7 @@ func FetchRandomRoute(deployment common.Deployment, routingEngine common.Routing
 	ghUrl += "&profile=" + profiles[rand.Intn(len(profiles))]
 	ghUrl += "&point=" + fmt.Sprintf("%f,%f", start[1], start[0])
 	ghUrl += "&point=" + fmt.Sprintf("%f,%f", end[1], end[0])
-	responseBody := common.Get(ghUrl, "GraphHopper")
+	responseBody := common.Get(ghUrl, "GraphHopper", nil)
 	// Parse the response with the json decoder.
 	ghRoute := RouteResponse{}
 	jsonErr := json.Unmarshal(responseBody, &ghRoute)

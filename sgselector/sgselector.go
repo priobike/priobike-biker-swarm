@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"math/rand"
 
 	"github.com/priobike/priobike-biker-swarm/common"
 	"github.com/priobike/priobike-biker-swarm/graphhopper"
@@ -54,7 +55,11 @@ type SGCrossing struct {
 
 // Fetch a sg selector request.
 func FetchSgSelector(deployment common.Deployment, ghPath graphhopper.RouteResponsePath, routingEngine common.RoutingEngine) *SGResponse {
-	matcher := "ml"
+	matchers := []string{
+		"legacy",
+		"ml",
+	}
+	matcher := matchers[rand.Intn(len(matchers))]
 	// Create a sg selector url.
 	sgUrl := fmt.Sprintf("https://%s/", deployment.BaseUrl())
 	sgUrl += "sg-selector-backend/routing/select"

@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/priobike/priobike-biker-swarm/answers"
+	"github.com/priobike/priobike-biker-swarm/auth"
 	"github.com/priobike/priobike-biker-swarm/common"
 	"github.com/priobike/priobike-biker-swarm/graphhopper"
 	"github.com/priobike/priobike-biker-swarm/layers"
@@ -18,7 +19,6 @@ import (
 	"github.com/priobike/priobike-biker-swarm/sgselector"
 	"github.com/priobike/priobike-biker-swarm/status"
 	"github.com/priobike/priobike-biker-swarm/tracking"
-	"github.com/priobike/priobike-biker-swarm/traffic"
 )
 
 func main() {
@@ -78,6 +78,9 @@ func main() {
 	// Fetch the weather. (leave out for now because it's not our API/service)
 	// weather.FetchWeather(deployment)
 
+	// Fetch the auth config.
+	authConfig := auth.FetchAuth(deployment)
+
 	// Fetch the status monitor summary.
 	status.FetchStatusSummary(deployment, predictionMode)
 
@@ -97,9 +100,6 @@ func main() {
 	layers.FetchMapData(deployment, layers.Repair)
 	layers.FetchMapData(deployment, layers.GreenWave)
 	layers.FetchMapData(deployment, layers.Veloroutes)
-
-	// Fetch the traffic.
-	traffic.FetchCurrentTraffic(deployment)
 
 	// Fetch a random location, for a random number of tries between 2 and 10.
 	for i := 0; i < rand.Intn(8)+2; i++ {
@@ -125,7 +125,7 @@ func main() {
 	// Subscribe to a random number of predictions.
 	for i := 0; i < rand.Intn(8)+2; i++ {
 		// Fetch a random prediction.
-		predictions.SubscribeToRandomConnection(deployment, predictionMode)
+		predictions.SubscribeToRandomConnection(deployment, predictionMode, authConfig)
 	}
 
 	// Send tracking data.

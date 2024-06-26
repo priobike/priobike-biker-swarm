@@ -110,22 +110,6 @@ func (w Deployment) PredictionServiceMqttPort() int {
 	}[w]
 }
 
-func (w Deployment) PredictionServiceMqttUsername() string {
-	return []string{
-		"user",
-		"user",
-		"user",
-	}[w]
-}
-
-func (w Deployment) PredictionServiceMqttPassword() string {
-	return []string{
-		"mqtt@priobike-2022",
-		"mqtt@priobike-2022",
-		"mqtt@priobike-2022",
-	}[w]
-}
-
 func (w Deployment) PredictorMqttUrl() string {
 	return []string{
 		"priobike.vkw.tu-dresden.de",
@@ -139,22 +123,6 @@ func (w Deployment) PredictorMqttPort() int {
 		20054,
 		20035,
 		20054,
-	}[w]
-}
-
-func (w Deployment) PredictorMqttUsername() string {
-	return []string{
-		"user",
-		"user",
-		"user",
-	}[w]
-}
-
-func (w Deployment) PredictorMqttPassword() string {
-	return []string{
-		"mqtt@priobike-2022",
-		"mqtt@priobike-2022",
-		"mqtt@priobike-2022",
 	}[w]
 }
 

@@ -1,13 +1,13 @@
 version: '3'
 services:
   virtual-biker:
-    image: bikenow.vkw.tu-dresden.de/priobike/priobike-biker-swarm:main
+    build: .
     environment:
       - TIMEOUT=5
       - DEPLOYMENT=production
       - REPORT_RESULTS=false
     deploy:
       mode: replicated
-      replicas: 700
+      replicas: 10
       restart_policy:
         condition: any

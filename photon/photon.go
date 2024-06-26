@@ -21,7 +21,7 @@ func Search(deployment common.Deployment) {
 	url = url + "&lang=de"
 	url = url + "&limit=10"
 
-	common.Get(url, "Photon Search")
+	common.Get(url, "Photon Search", nil)
 }
 
 func ReverseGeocode(deployment common.Deployment) {
@@ -30,5 +30,5 @@ func ReverseGeocode(deployment common.Deployment) {
 
 	// Create a photon url.
 	url := fmt.Sprintf("https://%s/photon/reverse?lon=%f&lat=%f", deployment.BaseUrl(), location.Lon, location.Lat)
-	common.Get(url, "Photon Reverse Geocode")
+	common.Get(url, "Photon Reverse Geocode", nil)
 }

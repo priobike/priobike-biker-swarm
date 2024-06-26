@@ -14,7 +14,7 @@ type NewsArticle struct {
 func FetchNews(deployment common.Deployment) {
 	urlNews := "https://" + deployment.BaseUrl() + "/news-service/news/articles"
 
-	responseBody := common.Get(urlNews, "News Articles")
+	responseBody := common.Get(urlNews, "News Articles", nil)
 	newsArticles := []NewsArticle{}
 	json.Unmarshal(responseBody, &newsArticles)
 
@@ -23,6 +23,6 @@ func FetchNews(deployment common.Deployment) {
 			continue
 		}
 		urlCategory := "https://" + deployment.BaseUrl() + "/news-service/news/category/" + strconv.Itoa(newsArticle.CategoryId)
-		common.Get(urlCategory, "News Category")
+		common.Get(urlCategory, "News Category", nil)
 	}
 }

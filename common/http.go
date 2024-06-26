@@ -7,13 +7,20 @@ import (
 	"os"
 )
 
-func Get(url string, serviceName string) []byte {
+func Get(url string, serviceName string, headers map[string]string) []byte {
 	client := http.Client{
 		Timeout: Timeout(),
 	}
-	response, err := client.Get(url)
+	request, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		panic(serviceName + ": " + err.Error())
+	}
+	for key, value := range headers {
+		request.Header.Add(key, value)
+	}
+	response, requestErr := client.Do(request)
+	if requestErr != nil {
+		panic(serviceName + ": " + requestErr.Error())
 	}
 	defer response.Body.Close()
 	fmt.Println(serviceName+" status:", response.Status)
