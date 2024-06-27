@@ -8,6 +8,6 @@ services:
       - REPORT_RESULTS=false
     deploy:
       mode: replicated
-      replicas: 10
+      replicas: 170
       restart_policy:
         condition: any
